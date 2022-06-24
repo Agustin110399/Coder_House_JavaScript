@@ -12,10 +12,6 @@ class libro {
 
     }
 
-    getPrecio() {
-        return this.precio;
-    }
-
 }
 
 class carritoDeCompras {
@@ -51,8 +47,10 @@ function mostrarYSeleccionarLosLibros() {
 }
 
 function confirmarCompra() {
-    const respuesta = prompt("¿Desea comprar algo?\n1) Si \n2) No");
-    if (respuesta == "si" || respuesta == "SI" || respuesta == "Si" || respuesta == "S") {
+    let respuesta = prompt("¿Desea comprar algo?\n1) Si \n2) No");
+    respuesta = respuesta.toLowerCase();
+    console.log(respuesta);
+    if (respuesta == "si" ) {
         return true;
     } else {
         return false;
@@ -72,14 +70,14 @@ function agregarlibroAlCarrito(id) {
 
 function mostrarCarritoActual() {
 
-    const contenidoDelCarrito = carritoParaLosLibros.reduce((acc, el) => acc + el.cantidad, 0);
+    const contenidoDelCarrito = carritoParaLosLibros.reduce((acc, el) => acc + el.cantidad, 0); //obtengo la cantidad de libros comprados.
 
 
-    //agregar luego el metodo para sumar los precios.
-
-    const precioTotal = 0;
-
-    alert("El carrito tiene actualmente " + contenidoDelCarrito + " libros y en total cuestan: " + precioTotal + " $");
+    let precio = carritoParaLosLibros.reduce((acc, el) => acc + el.libros.precio, 0);
+    precioTotal=precio*contenidoDelCarrito; // multimplica el precio del libro elegido y lo multiplica por la cantidad de libros comprados.
+    
+    
+    alert("El carrito tiene actualmente " + contenidoDelCarrito + " libros y en total cada uno cuesta: " +precio+ "$.\nEl total de su compra es de : " + precioTotal + " $.\nGracias por su compra.");
 
   }
 
