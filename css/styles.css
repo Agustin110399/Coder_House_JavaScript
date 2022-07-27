@@ -1,0 +1,23 @@
+img {
+    width: 387px;
+    height: 680px;
+
+}
+
+.libro {
+    border: 5px solid black;
+    margin: 5px;
+}
+
+.boton-volver {
+    display: block;
+}
+
+body {
+    background-color: aqua;
+}
+
+#contenedorDeLibros {
+    display: flex;
+    flex-wrap: wrap;
+}
