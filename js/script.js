@@ -8,30 +8,62 @@ fetch("api.json")
     .then((data) => {
 
         data.forEach((book) => {
+
+            // Creando los elementos HTML
             const divLibro = document.createElement("div");
-            divLibro.classList.add("libro");
-            divLibro.innerHTML = `
-        <img src="${book.img}" alt="${book.titulo}">
-        <h3>${book.titulo}</h3>
-        <p>${book.autor}</p>
-        <p>${book.editorial}</p>
-        <p>${book.precio}</p>
-        `;
-
-
+            const nombreDeLibro = document.createElement("h2");
+            const autorDeLibro = document.createElement("h3");
+            const imgDeLibro = document.createElement("img");
+            const precioDeLibro = document.createElement("p");
+            const editorialDeLibro = document.createElement("p");
             const btnComprar = document.createElement("button");
-            btnComprar.innerText = "Comprar";
+            const btnSinopsis = document.createElement("button");
+            const cardBody = document.createElement("div");
+
+            // Asignacion de clases para los estilos CSS y Bootstrap
+
+            divLibro.className = "card"
+            imgDeLibro.className = "img-fluid card-img-top"
+            nombreDeLibro.className = "card-title nombre-libro"
+            autorDeLibro.className = "card-text autor-libro"
+            precioDeLibro.className = "card-text precio-libro"
+            editorialDeLibro.className = "card-text editorial-libro"
+            btnComprar.className = "btn btn-primary"
+            btnSinopsis.className = "btn btn-primary"
+            cardBody.className = "card-body"
+
+            divLibro.id = book.id;
+            imgDeLibro.src = book.img;
+            nombreDeLibro.append(book.titulo);
+            precioDeLibro.append(`$${book.precio}`);
+            editorialDeLibro.append(book.editorial);
+            autorDeLibro.append(book.autor);
+            btnComprar.id = `${book.id}`
+
+            
+            //asignando texto interno a los botones
+
+
+            btnComprar.innerText = "Agregar al carrito";
+            btnSinopsis.innerText = "Ver Sinopsis";
+
+            cardBody.append(imgDeLibro, nombreDeLibro, precioDeLibro, autorDeLibro, editorialDeLibro, btnComprar, btnSinopsis);
+            divLibro.append(cardBody);
+            contenedorDeLibros.append(divLibro);
+
+
+            // asignacion de funcionalidad en los botones
+
+            
             btnComprar.addEventListener("click", () => {
                 swal("Procesando la compra...", "Producto agregado al carrito", "success");
             })
-            const btnSinopsis = document.createElement("button");
-            btnSinopsis.innerText = "Ver Sinopsis";
+                        
             btnSinopsis.addEventListener("click", () => {
                 swal(book.descripcion);
             })
-            divLibro.appendChild(btnComprar);
-            divLibro.appendChild(btnSinopsis);
 
-            contenedorDeLibros.appendChild(divLibro);
+            
+           
         });
     })
