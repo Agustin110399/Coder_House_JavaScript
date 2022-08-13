@@ -1,69 +1,122 @@
-const contenedorDeLibros = document.querySelector("#contenedorDeLibros");
+const libros = document.getElementById("cards");
+const items = document.getElementById("items");
+const footer = document.getElementById("footer");
+const templateCard = document.getElementById("template-card").content
+const templateFooter = document.getElementById("template-footer").content
+const templateCarrito = document.getElementById("template-carrito").content
 
-let carrito = {}
+const fragment = document.createDocumentFragment();
+let carrito = [];
 
-fetch("api.json")
+document.addEventListener('DOMContentLoaded', () => {
+    fetchData();
+})
 
-    .then((res) => res.json())
-    .then((data) => {
-
-        data.forEach((book) => {
-
-            // Creando los elementos HTML
-            const divLibro = document.createElement("div");
-            const nombreDeLibro = document.createElement("h2");
-            const autorDeLibro = document.createElement("h3");
-            const imgDeLibro = document.createElement("img");
-            const precioDeLibro = document.createElement("p");
-            const editorialDeLibro = document.createElement("p");
-            const btnComprar = document.createElement("button");
-            const btnSinopsis = document.createElement("button");
-            const cardBody = document.createElement("div");
-
-            // Asignacion de clases para los estilos CSS y Bootstrap
-
-            divLibro.className = "card"
-            imgDeLibro.className = "img-fluid card-img-top"
-            nombreDeLibro.className = "card-title nombre-libro"
-            autorDeLibro.className = "card-text autor-libro"
-            precioDeLibro.className = "card-text precio-libro"
-            editorialDeLibro.className = "card-text editorial-libro"
-            btnComprar.className = "btn btn-primary"
-            btnSinopsis.className = "btn btn-primary"
-            cardBody.className = "card-body"
-
-            divLibro.id = book.id;
-            imgDeLibro.src = book.img;
-            nombreDeLibro.append(book.titulo);
-            precioDeLibro.append(`$${book.precio}`);
-            editorialDeLibro.append(book.editorial);
-            autorDeLibro.append(book.autor);
-            btnComprar.id = `${book.id}`
-
-            
-            //asignando texto interno a los botones
+libros.addEventListener("click", e => {
+    addCarrito(e)
+})
 
 
-            btnComprar.innerText = "Agregar al carrito";
-            btnSinopsis.innerText = "Ver Sinopsis";
+const fetchData = async () => {
+    try {
+        const res = await fetch("api.json")
+        const data = await res.json();
+        pintarCards(data);
+    } catch (error) {
+        console.log(error);
+    }
+}
 
-            cardBody.append(imgDeLibro, nombreDeLibro, precioDeLibro, autorDeLibro, editorialDeLibro, btnComprar, btnSinopsis);
-            divLibro.append(cardBody);
-            contenedorDeLibros.append(divLibro);
 
-
-            // asignacion de funcionalidad en los botones
-
-            
-            btnComprar.addEventListener("click", () => {
-                swal("Procesando la compra...", "Producto agregado al carrito", "success");
-            })
-                        
-            btnSinopsis.addEventListener("click", () => {
-                swal(book.descripcion);
-            })
-
-            
-           
-        });
+const pintarCards = data => {
+    data.forEach(libro => {
+        templateCard.querySelector(".titulo").textContent = libro.titulo;
+        templateCard.querySelector(".precio").textContent = libro.precio;
+        templateCard.querySelector("img").setAttribute("src", libro.img);
+        templateCard.querySelector(".autor").textContent = libro.autor;
+        templateCard.querySelector(".editorial").textContent = libro.editorial;
+        templateCard.querySelector(".btn-dark").dataset.id = libro.id;
+        /* templateCard.querySelector(".descripcion").textContent = libro.descripcion;
+         const descripcion = libro.descripcion;*/
+        const clone = templateCard.cloneNode(true);
+        fragment.appendChild(clone);
     })
+
+    libros.appendChild(fragment);
+}
+
+
+const addCarrito = e => {
+
+    if (e.target.classList.contains("btn-dark")) {
+        setCarrito(e.target.parentElement)
+    }
+    e.stopPropagation();
+}
+
+const setCarrito = objeto => {
+
+    const libro = {
+        id: objeto.querySelector(".btn-dark").dataset.id,
+        titulo: objeto.querySelector(".titulo").textContent,
+        precio: objeto.querySelector(".precio").textContent,
+        autor: objeto.querySelector(".autor").textContent,
+        editorial: objeto.querySelector(".editorial").textContent,
+        cantidad: 1,
+    }
+
+    if (carrito.hasOwnProperty(libro.id)) {
+        libro.cantidad = carrito[libro.id].cantidad + 1;
+    }
+
+    carrito[libro.id] = {
+        ...libro
+    };
+    pintarCarrito();
+
+}
+
+const pintarCarrito = () => {
+    items.innerHTML = "";
+    Object.values(carrito).forEach(libro => {
+            templateCarrito.querySelector("th").textContent = libro.id,
+            templateCarrito.querySelectorAll("td")[0].textContent = libro.titulo,
+            templateCarrito.querySelectorAll("td")[1].textContent = libro.cantidad,
+            //botones
+            templateCarrito.querySelector('.btn-info').dataset.id = libro.id
+            templateCarrito.querySelector('.btn-danger').dataset.id = libro.id
+
+        templateCarrito.querySelector("span").textContent = libro.cantidad * libro.precio
+
+        const clone = templateCarrito.cloneNode(true);
+        fragment.appendChild(clone);
+    })
+
+    items.appendChild(fragment);
+
+    pintarFooter();
+}
+
+const pintarFooter = () => {
+    footer.innerHTML = "";
+    if (Object.keys(carrito).length === 0) {
+        footer.innerHTML = `
+        <th scope="row" colspan="5">Carrito vacío - comience a comprar!</th>
+        `
+    }
+
+    const sumaCantidad = Object.values(carrito).reduce((acc, {
+        cantidad
+    }) => acc + cantidad, 0);
+    const sumaPrecio = Object.values(carrito).reduce((acc, {
+        cantidad,
+        precio
+    }) => acc + cantidad * precio, 0);
+
+    templateFooter.querySelectorAll("td")[0].textContent = sumaCantidad;
+    templateFooter.querySelector("span").textContent = sumaPrecio;
+
+    const clone = templateFooter.cloneNode(true);
+    fragment.appendChild(clone);
+    footer.appendChild(fragment);
+}

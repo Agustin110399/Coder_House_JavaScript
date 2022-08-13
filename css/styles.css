@@ -27,9 +27,9 @@ html,body{
   
   .card{
   
-    height: 500px;
+    height: 700px;
     width: 400px;
-    margin: 20px 0px;
+    margin: 10px 0px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -38,9 +38,8 @@ html,body{
   }
   
   .card-img-top{
-  
-    height: 200px;
-    width: 350px;
+    width: 100;
+    height: 350px;
   }
   
   .nombre-libro{
@@ -49,16 +48,29 @@ html,body{
     font-weight: 800;
   }
   
-  .card-precio{
+  .precio-libro{
+  
+    font-weight: 500;
+    color:rgb(69, 69, 171)
+  }
+
+  .autor-libro{
   
     font-weight: 500;
     color:rgb(69, 69, 171)
   }
   
-  .red{
-    color: red;
+  .editorial-libro{
+    font-weight: 500;
+    font-size: 25px;
+    color:rgb(69, 69, 171)
   }
-  
-  .blue{
-    color: blue;
+
+
+  .card-body{
+    display: flex;
+    flex-direction: column;
+    gap: 0.1em;
   }
+
+
