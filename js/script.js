@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-libros.addEventListener("click", e => { 
-    
+libros.addEventListener("click", e => {
+
 
     addCarrito(e);
 
@@ -63,10 +63,7 @@ const pintarCards = data => {
     libros.appendChild(fragment);
 
 
-
 }
-
-
 
 
 
@@ -159,26 +156,37 @@ const pintarFooter = () => {
         pintarCarrito();
         swal("Vaciando carrito...", "Carrito vaciado", "success");
     })
+
+    const btnComprarTodo = document.getElementById("carrito-comprar");
+    btnComprarTodo.addEventListener("click", () => {
+        carrito = {}
+        pintarCarrito();
+        swal("Felicidades", "Tu compra fue realizada con exito", "success");
+    })
+
+
 }
 
 const btnAccion = e => {
 
     //accion de agregar el mismo producto al carrito
-    if(e.target.classList.contains("btn-info")){        
+    if (e.target.classList.contains("btn-info")) {
         const producto = carrito[e.target.dataset.id];
-        producto.cantidad = carrito[e.target.dataset.id].cantidad+1;
-        carrito[e.target.dataset.id] = {...producto};
+        producto.cantidad = carrito[e.target.dataset.id].cantidad + 1;
+        carrito[e.target.dataset.id] = {
+            ...producto
+        };
         pintarCarrito();
     }
 
 
     //accion de restar un producto del carrito
-    if(e.target.classList.contains("btn-danger")){        
+    if (e.target.classList.contains("btn-danger")) {
         const producto = carrito[e.target.dataset.id];
         producto.cantidad--;
-        if(producto.cantidad === 0){
+        if (producto.cantidad === 0) {
             delete carrito[e.target.dataset.id];
-        }        
+        }
         pintarCarrito();
     }
 
