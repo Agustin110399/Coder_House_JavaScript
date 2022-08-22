@@ -2,31 +2,12 @@ html,body{
     width: 100%;
     height: 100%;
   }
-  
-  .titulo-pagina{
-    width: 100%;
-    height: 8%;
-    display: flex;
-    justify-content: space-around;
-    align-content: center;
-    background-color: rgb(175, 175, 255);
-    color: white;
-    margin: 0;
-    padding-top: 12px;
-  }
-  
-  .contenedor-libros{
-    padding-top: 3%;
-    display: flex;
-    width: 100%;
-    height: auto;
-    justify-content: space-around;
-    background-color: rgb(205, 248, 255);
-    flex-wrap: wrap;
-  }
-  
+
+
   .card{
   
+    background-color:lightgrey;
+
     height: 700px;
     width: 400px;
     margin: 10px 0px;
@@ -42,32 +23,21 @@ html,body{
     height: 350px;
   }
   
-  .nombre-libro{
+  .titulo{
   
-    color: rgb(75, 118, 235);
+    color: rgb(13, 172, 79);
     font-weight: 800;
   }
   
-  .precio-libro{
+  .precio, .autor, .editorial{
   
     font-weight: 500;
-    color:rgb(69, 69, 171)
-  }
-
-  .autor-libro{
-  
-    font-weight: 500;
-    color:rgb(69, 69, 171)
-  }
-  
-  .editorial-libro{
-    font-weight: 500;
-    font-size: 25px;
-    color:rgb(69, 69, 171)
+    color:rgb(13, 172, 79)
   }
 
 
   .card-body{
+    
     display: flex;
     flex-direction: column;
     gap: 0.1em;

@@ -12,8 +12,17 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchData();
 })
 
-libros.addEventListener("click", e => {
-    addCarrito(e)
+
+
+libros.addEventListener("click", e => { 
+    
+
+    addCarrito(e);
+
+})
+
+items.addEventListener("click", e => {
+    btnAccion(e)
 })
 
 
@@ -28,8 +37,13 @@ const fetchData = async () => {
 }
 
 
+
+
 const pintarCards = data => {
     data.forEach(libro => {
+
+
+
         templateCard.querySelector(".titulo").textContent = libro.titulo;
         templateCard.querySelector(".precio").textContent = libro.precio;
         templateCard.querySelector("img").setAttribute("src", libro.img);
@@ -38,20 +52,38 @@ const pintarCards = data => {
         templateCard.querySelector(".btn-dark").dataset.id = libro.id;
         /* templateCard.querySelector(".descripcion").textContent = libro.descripcion;
          const descripcion = libro.descripcion;*/
+
+
+
         const clone = templateCard.cloneNode(true);
         fragment.appendChild(clone);
+
     })
 
     libros.appendChild(fragment);
+
+
+
 }
+
+
+
 
 
 const addCarrito = e => {
 
+
+
     if (e.target.classList.contains("btn-dark")) {
-        setCarrito(e.target.parentElement)
+        setCarrito(e.target.parentElement);
+
     }
+
     e.stopPropagation();
+
+
+
+
 }
 
 const setCarrito = objeto => {
@@ -79,12 +111,12 @@ const setCarrito = objeto => {
 const pintarCarrito = () => {
     items.innerHTML = "";
     Object.values(carrito).forEach(libro => {
-            templateCarrito.querySelector("th").textContent = libro.id,
+        templateCarrito.querySelector("th").textContent = libro.id,
             templateCarrito.querySelectorAll("td")[0].textContent = libro.titulo,
             templateCarrito.querySelectorAll("td")[1].textContent = libro.cantidad,
             //botones
             templateCarrito.querySelector('.btn-info').dataset.id = libro.id
-            templateCarrito.querySelector('.btn-danger').dataset.id = libro.id
+        templateCarrito.querySelector('.btn-danger').dataset.id = libro.id
 
         templateCarrito.querySelector("span").textContent = libro.cantidad * libro.precio
 
@@ -103,6 +135,7 @@ const pintarFooter = () => {
         footer.innerHTML = `
         <th scope="row" colspan="5">Carrito vacío - comience a comprar!</th>
         `
+        return;
     }
 
     const sumaCantidad = Object.values(carrito).reduce((acc, {
@@ -119,4 +152,36 @@ const pintarFooter = () => {
     const clone = templateFooter.cloneNode(true);
     fragment.appendChild(clone);
     footer.appendChild(fragment);
+
+    const btnVaciar = document.getElementById("vaciar-carrito");
+    btnVaciar.addEventListener("click", () => {
+        carrito = {}
+        pintarCarrito();
+        swal("Vaciando carrito...", "Carrito vaciado", "success");
+    })
+}
+
+const btnAccion = e => {
+
+    //accion de agregar el mismo producto al carrito
+    if(e.target.classList.contains("btn-info")){        
+        const producto = carrito[e.target.dataset.id];
+        producto.cantidad = carrito[e.target.dataset.id].cantidad+1;
+        carrito[e.target.dataset.id] = {...producto};
+        pintarCarrito();
+    }
+
+
+    //accion de restar un producto del carrito
+    if(e.target.classList.contains("btn-danger")){        
+        const producto = carrito[e.target.dataset.id];
+        producto.cantidad--;
+        if(producto.cantidad === 0){
+            delete carrito[e.target.dataset.id];
+        }        
+        pintarCarrito();
+    }
+
+    e.stopPropagation();
+
 }
